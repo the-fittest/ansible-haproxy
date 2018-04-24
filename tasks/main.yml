@@ -1,0 +1,60 @@
+---
+# tasks file for haproxy
+
+- name: Install Packages
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - "{{ haproxy_packages }}"
+    - "{{ haproxy_additional_packages }}"
+  tags:
+    - package
+    - haproxy
+
+- name: Create fragments folder
+  file:
+    path: /etc/haproxy/conf.d
+    state: directory
+    owner: root
+    group: root
+    mode: 0640
+  tags:
+    - setup
+    - haproxy
+
+- name: Add config fragments
+  template:
+    src: "{{ item }}"
+    dest: "/etc/haproxy/conf.d/{{ item | basename | replace('.j2', '') }}"
+    owner: root
+    group: root
+    mode: 0640
+  with_items:
+    - "{{ haproxy_config_files }}"
+  tags:
+    - config
+    - haproxy
+
+- name: Assemble main config
+  when: haproxy_config_files | length > 0
+  assemble:
+    src: /etc/haproxy/conf.d/
+    dest: /etc/haproxy/haproxy.cfg
+    owner: root
+    group: root
+    mode: 0640
+    validate: '/usr/sbin/haproxy -c -f %s'
+  notify: reload haproxy
+  tags:
+    - config
+    - haproxy
+
+- name: Start and enable haproxy
+  service:
+    name: haproxy
+    enabled: yes
+    state: started
+  tags:
+    - service
+    - haproxy

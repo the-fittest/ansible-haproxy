@@ -1,0 +1,15 @@
+---
+# defaults file for haproxy
+haproxy_packages:
+  - haproxy
+  - hatop
+  - socat
+
+haproxy_additional_packages: []
+
+haproxy_config_files: []
+
+haproxy_address: 0.0.0.0
+haproxy_ports:
+  - 80
+  - 443

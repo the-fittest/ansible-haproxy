@@ -1,0 +1,25 @@
+---
+package:
+  haproxy:
+    installed: true
+  hatop:
+    installed: true
+  socat:
+    installed: true
+service:
+  haproxy:
+    enabled: true
+    running: true
+user:
+  haproxy:
+    exists: true
+    groups:
+      - haproxy
+    home: /var/lib/haproxy
+    shell: /bin/false
+group:
+  haproxy:
+    exists: true
+process:
+  haproxy:
+    running: true

@@ -1,0 +1,10 @@
+---
+- name: Converge
+  hosts: all
+  vars:
+    haproxy_config_files:
+      - tests/templates/10-globals.cfg.j2
+      - tests/templates/50-defaults.cfg.j2
+
+  roles:
+    - role: haproxy
